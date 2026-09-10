@@ -8,7 +8,7 @@
     <AssemblyName>SaBetaYmm</AssemblyName>
     <RootNamespace>SaBetaYmm</RootNamespace>
     <Deterministic>true</Deterministic>
-    <Version>0.1.1</Version>
+    <Version>0.2.0</Version>
     <PathMap>$(MSBuildProjectDirectory)=/_/</PathMap>
     <FxcPath Condition="'$(FxcPath)' == ''">$(WindowsSdkBinPath)x64\fxc.exe</FxcPath>
     <D2DIncludePath Condition="'$(D2DIncludePath)' == ''">$(WindowsSdkDir)Include\$(WindowsTargetPlatformVersion)\um</D2DIncludePath>
@@ -32,3 +32,4 @@
     <Exec Command="&quot;$(FxcPath)&quot; /nologo /WX /I &quot;$(D2DIncludePath)&quot; /D D2D_INPUT_COUNT=1 /T ps_4_0 /E main /Fo &quot;$(IntermediateOutputPath)Roman.cso&quot; &quot;$(MSBuildProjectDirectory)/Shaders/Roman.hlsl&quot;" />
   </Target>
 </Project>
+

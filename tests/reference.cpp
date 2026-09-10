@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <cstddef>
 using std::cos; using std::sin; using std::exp; using std::pow; using std::floor;
-using std::min; using std::abs;
+using std::min; using std::max; using std::sqrt; using std::abs;
 static float saturate(float x) { return std::clamp(x,0.f,1.f); }
 static float frac(float x) { return x-std::floor(x); }
 static float lerp(float a,float b,float t) { return a+(b-a)*t; }
@@ -58,3 +58,4 @@ extern "C" void render(const float* src,float* dst,int w,int h,const float* p)
         }
     }
 }
+

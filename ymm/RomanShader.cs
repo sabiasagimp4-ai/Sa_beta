@@ -21,7 +21,7 @@ internal sealed class RomanShader(IGraphicsDevicesAndContext devices) : D2D1Cust
     {
         private Constants _constants = new() { Density=8, Radius=32, Amount=1 };
         public Impl() : base(ShaderResourceLoader.Get("Roman")) { }
-        [CustomEffectProperty(PropertyType.Float, 0)] public float Mode { get => _constants.Mode; set { _constants.Mode=float.IsFinite(value) ? Math.Clamp(value,0f,1f) : 0f; UpdateConstants(); } }
+        [CustomEffectProperty(PropertyType.Float, 0)] public float Mode { get => _constants.Mode; set { _constants.Mode=float.IsFinite(value) ? Math.Clamp(value,0f,2f) : 0f; UpdateConstants(); } }
         [CustomEffectProperty(PropertyType.Float, 1)] public float Amount { get => _constants.Amount; set { _constants.Amount=float.IsFinite(value) ? Math.Clamp(value,0f,1f) : 0f; UpdateConstants(); } }
         [CustomEffectProperty(PropertyType.Float, 2)] public float Radius { get => _constants.Radius; set { _constants.Radius=float.IsFinite(value) ? Math.Clamp(value,0f,512f) : 0f; UpdateConstants(); } }
         [CustomEffectProperty(PropertyType.Float, 3)] public float Density { get => _constants.Density; set { _constants.Density=float.IsFinite(value) ? Math.Clamp(value,0.25f,64f) : 0.25f; UpdateConstants(); } }
@@ -63,7 +63,9 @@ internal sealed class RomanShader(IGraphicsDevicesAndContext devices) : D2D1Cust
         }
         public override void MapOutputRectToInputRects(RawRect outputRect, RawRect[] inputRects)
         {
-            int halo=(int)MathF.Ceiling(_constants.Radius+_constants.Dispersion)+2;
+            int halo=(int)MathF.Ceiling(_constants.Mode > 1.5f
+                ? _constants.Radius + 1f + MathF.Min(_constants.Radius*.04f,8f)
+                : _constants.Radius+_constants.Dispersion)+2;
             inputRects[0]=new(outputRect.Left-halo,outputRect.Top-halo,outputRect.Right+halo,outputRect.Bottom+halo);
         }
         [InlineArray(16)]
@@ -78,3 +80,4 @@ internal sealed class RomanShader(IGraphicsDevicesAndContext devices) : D2D1Cust
         }
     }
 }
+

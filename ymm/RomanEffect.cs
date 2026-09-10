@@ -16,9 +16,9 @@ public sealed class RomanEffect : VideoEffectBase
     public Animation Amount { get; } = new(100, 0, 100);
     [Display(Name="広がり", Order=2)] [AnimationSlider("F2", "px", 0, 512)]
     public Animation Radius { get; } = new(32, 0, 512);
-    [Display(Name="層数・波数", Order=3)] [AnimationSlider("F2", "", 0.25, 64)]
+    [Display(Name="層数・波数・渦密度", Order=3)] [AnimationSlider("F2", "", 0.25, 64)]
     public Animation Density { get; } = new(8, 0.25, 64);
-    [Display(Name="色の分離", Order=4)] [AnimationSlider("F2", "", 0, 150)]
+    [Display(Name="色の分離・渦の強さ", Order=4)] [AnimationSlider("F2", "", 0, 150)]
     public Animation Dispersion { get; } = new(16, 0, 150);
     [Display(Name="発光", Order=5)] [AnimationSlider("F2", "", 0, 4)]
     public Animation Glow { get; } = new(0.6, 0, 4);
@@ -33,5 +33,7 @@ public sealed class RomanEffect : VideoEffectBase
 public enum RomanMode
 {
     [Display(Name="色彩地層")] Strata=0,
-    [Display(Name="輪郭干渉")] Interference=1
+    [Display(Name="輪郭干渉")] Interference=1,
+    [Display(Name="色流体")] PigmentFlow=2
 }
+
