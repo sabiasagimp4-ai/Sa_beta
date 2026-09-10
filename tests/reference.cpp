@@ -3,10 +3,26 @@
 #include <cstddef>
 using std::cos; using std::sin; using std::exp; using std::pow; using std::floor;
 using std::min; using std::max; using std::sqrt; using std::abs;
+struct float2
+{
+    float x,y;
+    float2() : x(0), y(0) {}
+    float2(float xx,float yy) : x(xx), y(yy) {}
+};
+static float2 operator+(float2 a,float2 b) { return {a.x+b.x,a.y+b.y}; }
+static float2 operator-(float2 a,float2 b) { return {a.x-b.x,a.y-b.y}; }
+static float2 operator*(float2 a,float b) { return {a.x*b,a.y*b}; }
+static float2 operator*(float b,float2 a) { return {a.x*b,a.y*b}; }
+static float2 operator/(float2 a,float b) { return {a.x/b,a.y/b}; }
+static float2& operator-=(float2& a,float2 b) { a.x-=b.x;a.y-=b.y;return a; }
+static float2& operator+=(float2& a,float2 b) { a.x+=b.x;a.y+=b.y;return a; }
 static float saturate(float x) { return std::clamp(x,0.f,1.f); }
+static float clamp(float x,float lo,float hi) { return std::clamp(x,lo,hi); }
 static float frac(float x) { return x-std::floor(x); }
 static float lerp(float a,float b,float t) { return a+(b-a)*t; }
+static float2 lerp(float2 a,float2 b,float t) { return {a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t}; }
 static thread_local float mode,amount,radius,density,dispersion,glow,phase,angle;
+static thread_local float waterAmount,colorInfluence,pressure,viscosity,iterations;
 static thread_local const float* pixels;
 static thread_local int width,height;
 #define LOOP
@@ -38,6 +54,7 @@ extern "C" void render(const float* src,float* dst,int w,int h,const float* p)
     {
         pixels=src;width=w;height=h;
         mode=p[0];amount=p[1];radius=p[2];density=p[3];dispersion=p[4];glow=p[5];phase=p[6];angle=p[7];
+        waterAmount=p[8];colorInfluence=p[9];pressure=p[10];viscosity=p[11];iterations=p[12];
         #ifndef ROMAN_BASELINE
         for(int i=0;i<16;++i) {
             // Match the original scalar core's arithmetic, including intermediate rounding.
@@ -58,4 +75,3 @@ extern "C" void render(const float* src,float* dst,int w,int h,const float* p)
         }
     }
 }
-

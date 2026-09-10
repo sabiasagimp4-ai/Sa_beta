@@ -26,9 +26,19 @@ public sealed class RomanEffect : VideoEffectBase
     public Animation Phase { get; } = new(0, -1000, 1000);
     [Display(Name="方向", Order=7)] [AnimationSlider("F2", "°", -360, 360)]
     public Animation Angle { get; } = new(0, -360, 360);
+    [Display(Name="水量", Order=8)] [AnimationSlider("F2", "%", 0, 200)]
+    public Animation WaterAmount { get; } = new(100, 0, 200);
+    [Display(Name="色が決める流れ", Order=9)] [AnimationSlider("F2", "%", 0, 200)]
+    public Animation ColorInfluence { get; } = new(100, 0, 200);
+    [Display(Name="圧力", Order=10)] [AnimationSlider("F2", "%", 0, 100)]
+    public Animation Pressure { get; } = new(55, 0, 100);
+    [Display(Name="粘度", Order=11)] [AnimationSlider("F2", "%", 0, 100)]
+    public Animation Viscosity { get; } = new(28, 0, 100);
+    [Display(Name="流体反復", Order=12)] [AnimationSlider("F0", "回", 1, 12)]
+    public Animation Iterations { get; } = new(8, 1, 12);
     public override IEnumerable<string> CreateExoVideoFilters(int keyFrameIndex, ExoOutputDescription exoOutputDescription) => [];
     public override IVideoEffectProcessor CreateVideoEffect(IGraphicsDevicesAndContext devices) => new RomanProcessor(devices,this);
-    protected override IEnumerable<IAnimatable> GetAnimatables() => [Amount, Radius, Density, Dispersion, Glow, Phase, Angle];
+    protected override IEnumerable<IAnimatable> GetAnimatables() => [Amount, Radius, Density, Dispersion, Glow, Phase, Angle, WaterAmount, ColorInfluence, Pressure, Viscosity, Iterations];
 }
 public enum RomanMode
 {
@@ -36,4 +46,3 @@ public enum RomanMode
     [Display(Name="輪郭干渉")] Interference=1,
     [Display(Name="色流体")] PigmentFlow=2
 }
-

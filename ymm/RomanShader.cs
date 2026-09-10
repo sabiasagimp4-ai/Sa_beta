@@ -16,10 +16,15 @@ internal sealed class RomanShader(IGraphicsDevicesAndContext devices) : D2D1Cust
     public float Glow { set => SetValue(5,value); }
     public float Phase { set => SetValue(6,value); }
     public float Angle { set => SetValue(7,value); }
+    public float WaterAmount { set => SetValue(8,value); }
+    public float ColorInfluence { set => SetValue(9,value); }
+    public float Pressure { set => SetValue(10,value); }
+    public float Viscosity { set => SetValue(11,value); }
+    public float Iterations { set => SetValue(12,value); }
     [CustomEffect(1)]
     private sealed class Impl : D2D1CustomShaderEffectImplBase<Impl>
     {
-        private Constants _constants = new() { Density=8, Radius=32, Amount=1 };
+        private Constants _constants = new() { Density=8, Radius=32, Amount=1, WaterAmount=100, ColorInfluence=100, Pressure=55, Viscosity=28, Iterations=8 };
         public Impl() : base(ShaderResourceLoader.Get("Roman")) { }
         [CustomEffectProperty(PropertyType.Float, 0)] public float Mode { get => _constants.Mode; set { _constants.Mode=float.IsFinite(value) ? Math.Clamp(value,0f,2f) : 0f; UpdateConstants(); } }
         [CustomEffectProperty(PropertyType.Float, 1)] public float Amount { get => _constants.Amount; set { _constants.Amount=float.IsFinite(value) ? Math.Clamp(value,0f,1f) : 0f; UpdateConstants(); } }
@@ -29,6 +34,11 @@ internal sealed class RomanShader(IGraphicsDevicesAndContext devices) : D2D1Cust
         [CustomEffectProperty(PropertyType.Float, 5)] public float Glow { get => _constants.Glow; set { _constants.Glow=float.IsFinite(value) ? Math.Clamp(value,0f,4f) : 0f; UpdateConstants(); } }
         [CustomEffectProperty(PropertyType.Float, 6)] public float Phase { get => _constants.Phase; set { _constants.Phase=float.IsFinite(value) ? Math.Clamp(value,-1000f,1000f) : 0f; UpdateConstants(); } }
         [CustomEffectProperty(PropertyType.Float, 7)] public float Angle { get => _constants.Angle; set { _constants.Angle=float.IsFinite(value) ? Math.Clamp(value,-7f,7f) : 0f; UpdateConstants(); } }
+        [CustomEffectProperty(PropertyType.Float, 8)] public float WaterAmount { get => _constants.WaterAmount; set { _constants.WaterAmount=float.IsFinite(value) ? Math.Clamp(value,0f,200f) : 100f; UpdateConstants(); } }
+        [CustomEffectProperty(PropertyType.Float, 9)] public float ColorInfluence { get => _constants.ColorInfluence; set { _constants.ColorInfluence=float.IsFinite(value) ? Math.Clamp(value,0f,200f) : 100f; UpdateConstants(); } }
+        [CustomEffectProperty(PropertyType.Float, 10)] public float Pressure { get => _constants.Pressure; set { _constants.Pressure=float.IsFinite(value) ? Math.Clamp(value,0f,100f) : 55f; UpdateConstants(); } }
+        [CustomEffectProperty(PropertyType.Float, 11)] public float Viscosity { get => _constants.Viscosity; set { _constants.Viscosity=float.IsFinite(value) ? Math.Clamp(value,0f,100f) : 28f; UpdateConstants(); } }
+        [CustomEffectProperty(PropertyType.Float, 12)] public float Iterations { get => _constants.Iterations; set { _constants.Iterations=float.IsFinite(value) ? Math.Clamp(value,1f,12f) : 8f; UpdateConstants(); } }
         private float _cachedAngle=float.NaN, _cachedDensity=float.NaN, _cachedPhase=float.NaN, _cachedDispersion=float.NaN;
         protected override void UpdateConstants()
         {
@@ -64,7 +74,7 @@ internal sealed class RomanShader(IGraphicsDevicesAndContext devices) : D2D1Cust
         public override void MapOutputRectToInputRects(RawRect outputRect, RawRect[] inputRects)
         {
             int halo=(int)MathF.Ceiling(_constants.Mode > 1.5f
-                ? _constants.Radius + 1f + MathF.Min(_constants.Radius*.04f,8f)
+                ? _constants.Radius + 2f + MathF.Min(_constants.Radius*.02f,8f)
                 : _constants.Radius+_constants.Dispersion)+2;
             inputRects[0]=new(outputRect.Left-halo,outputRect.Top-halo,outputRect.Right+halo,outputRect.Bottom+halo);
         }
@@ -75,9 +85,10 @@ internal sealed class RomanShader(IGraphicsDevicesAndContext devices) : D2D1Cust
         {
             public float Mode,Amount,Radius,Density;
             public float Dispersion,Glow,Phase,Angle;
+            public float WaterAmount,ColorInfluence,Pressure,Viscosity;
+            public float Iterations,FluidPad0,FluidPad1,FluidPad2;
             public float Left,Top,Right,Bottom;
             public VectorTable Directions, Waves;
         }
     }
 }
-

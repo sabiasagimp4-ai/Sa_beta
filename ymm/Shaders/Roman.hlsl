@@ -2,6 +2,8 @@
 #include <d2d1effecthelpers.hlsli>
 float mode, amount, radius, density;
 float dispersion, glow, phase, angle;
+float waterAmount, colorInfluence, pressure, viscosity;
+float iterations, fluidPad0, fluidPad1, fluidPad2;
 float4 inputBounds;
 // Precomputed once on the host when the corresponding animated values change.
 float4 directions[16];

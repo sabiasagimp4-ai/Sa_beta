@@ -8,7 +8,8 @@ old=ctypes.CDLL(str(Path(__file__).with_name('baseline.so').resolve()))
 old.render.argtypes=LIB.render.argtypes;old.render.restype=None
 
 def run(lib,src,p):
-    dst=np.empty_like(src);p=np.asarray(p,np.float32)
+    dst=np.empty_like(src)
+    p=np.asarray(list(p)+[100,100,55,28,8],np.float32)[:13]
     t=time.perf_counter()
     lib.render(src.ctypes.data_as(PTR),dst.ctypes.data_as(PTR),src.shape[1],src.shape[0],p.ctypes.data_as(PTR))
     return dst,time.perf_counter()-t

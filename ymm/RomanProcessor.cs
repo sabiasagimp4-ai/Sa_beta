@@ -37,6 +37,11 @@ internal sealed class RomanProcessor : IVideoEffectProcessor
         _shader.Glow=(float)(_item.Glow.GetValue(frame,length,fps) );
         _shader.Phase=(float)(_item.Phase.GetValue(frame,length,fps) );
         _shader.Angle=(float)(_item.Angle.GetValue(frame,length,fps) * Math.PI / 180.0);
+        _shader.WaterAmount=(float)_item.WaterAmount.GetValue(frame,length,fps);
+        _shader.ColorInfluence=(float)_item.ColorInfluence.GetValue(frame,length,fps);
+        _shader.Pressure=(float)_item.Pressure.GetValue(frame,length,fps);
+        _shader.Viscosity=(float)_item.Viscosity.GetValue(frame,length,fps);
+        _shader.Iterations=(float)_item.Iterations.GetValue(frame,length,fps);
         return effectDescription.DrawDescription;
     }
     public void Dispose() { ClearInput(); _output?.Dispose(); _shader?.Dispose(); }

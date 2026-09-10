@@ -12,7 +12,10 @@ LIB.render.restype = None
 def render(src, parameters):
     src = np.ascontiguousarray(src, dtype=np.float32)
     dst = np.empty_like(src)
-    p = np.asarray(parameters, dtype=np.float32)
+    # Older presets contain the original eight parameters. Fluid parameters
+    # default to a neutral, useful simulation when they are omitted.
+    values=list(parameters)+[100,100,55,28,8]
+    p = np.asarray(values[:13], dtype=np.float32)
     LIB.render(src.ctypes.data_as(PTR), dst.ctypes.data_as(PTR),src.shape[1],src.shape[0],p.ctypes.data_as(PTR))
     return dst
 

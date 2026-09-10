@@ -6,12 +6,12 @@ import numpy as np
 import json, sys, time
 
 PRESETS = [
-    ('01 Contour silk', [2,1,32,8,0,.3,0,0]),
-    ('02 Liquid glass', [2,1,65,5,35,.4,.4,0]),
-    ('03 Pigment currents', [2,1,120,7,65,.8,0,.3]),
-    ('04 Oil ribbons', [2,1,180,12,90,1.4,.7,0]),
-    ('05 Color whirlpool', [2,1,280,5,100,1.8,1.2,.5]),
-    ('06 Silk storm', [2,1,380,18,150,2.4,.3,1.2]),
+    ('01 Contour silk', [2,1,32,8,0,.3,0,0,70,35,75,65,4]),
+    ('02 Liquid glass', [2,1,65,5,35,.4,.4,0,100,80,55,35,6]),
+    ('03 Pigment currents', [2,1,120,7,65,.8,0,.3,130,130,45,28,8]),
+    ('04 Oil ribbons', [2,1,180,12,90,1.4,.7,0,150,165,35,20,9]),
+    ('05 Color whirlpool', [2,1,280,5,100,1.8,1.2,.5,180,190,70,12,10]),
+    ('06 Silk storm', [2,1,380,18,150,2.4,.3,1.2,200,200,90,5,12]),
 ]
 
 def main():
@@ -28,7 +28,7 @@ def main():
         x=i%3*480;y=i//3*414
         sheet.paste(im.resize((480,360),Image.Resampling.LANCZOS),(x,y))
         draw.text((x+12,y+363),name,font=font,fill='white')
-        draw.text((x+12,y+388),f'R {p[2]} / D {p[3]} / Swirl {p[4]} / Glow {p[5]}',font=font,fill='#aebacf')
+        draw.text((x+12,y+388),f'R {p[2]} / D {p[3]} / Color {p[9]} / Water {p[8]} / Iter {p[12]}',font=font,fill='#aebacf')
         records.append(dict(name=name,parameters=p,file=fn,seconds=time.perf_counter()-start))
         print(name,round(records[-1]['seconds'],2),flush=True)
     sheet.save(out/'flow_contact.jpg',quality=95)

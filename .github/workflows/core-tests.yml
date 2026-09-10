@@ -16,4 +16,3 @@ jobs:
       - run: OMP_NUM_THREADS=2 python tests/test_flow.py
       - run: g++ -O3 -std=c++17 -fopenmp -shared -fPIC -DROMAN_BASELINE tests/reference.cpp -o tests/baseline.so
       - run: OMP_NUM_THREADS=2 python tests/compare_optimization.py
-
