@@ -1,4 +1,6 @@
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
+using System.Numerics;
 using Vortice;
 using Vortice.Direct2D1;
 using YukkuriMovieMaker.Commons;
@@ -27,8 +29,29 @@ internal sealed class RomanShader(IGraphicsDevicesAndContext devices) : D2D1Cust
         [CustomEffectProperty(PropertyType.Float, 5)] public float Glow { get => _constants.Glow; set { _constants.Glow=float.IsFinite(value) ? Math.Clamp(value,0f,4f) : 0f; UpdateConstants(); } }
         [CustomEffectProperty(PropertyType.Float, 6)] public float Phase { get => _constants.Phase; set { _constants.Phase=float.IsFinite(value) ? Math.Clamp(value,-1000f,1000f) : 0f; UpdateConstants(); } }
         [CustomEffectProperty(PropertyType.Float, 7)] public float Angle { get => _constants.Angle; set { _constants.Angle=float.IsFinite(value) ? Math.Clamp(value,-7f,7f) : 0f; UpdateConstants(); } }
+        private float _cachedAngle=float.NaN, _cachedDensity=float.NaN, _cachedPhase=float.NaN, _cachedDispersion=float.NaN;
         protected override void UpdateConstants()
         {
+            if (_cachedAngle != _constants.Angle)
+            {
+                for (int i=0; i<16; i++)
+                {
+                    float theta=6.2831853f*(i/16f)+_constants.Angle;
+                    _constants.Directions[i]=new Vector4(MathF.Cos(theta),MathF.Sin(theta),0,0);
+                }
+                _cachedAngle=_constants.Angle;
+            }
+            if (_cachedDensity != _constants.Density || _cachedPhase != _constants.Phase || _cachedDispersion != _constants.Dispersion)
+            {
+                for (int i=0; i<16; i++)
+                {
+                    float u=(i+1)/16f;
+                    float wave=6.2831853f*u*_constants.Density-_constants.Phase;
+                    float spread=_constants.Dispersion*.03f;
+                    _constants.Waves[i]=new Vector4(MathF.Cos(wave-spread),MathF.Cos(wave),MathF.Cos(wave+spread),MathF.Exp(-u*2.5f));
+                }
+                _cachedDensity=_constants.Density; _cachedPhase=_constants.Phase; _cachedDispersion=_constants.Dispersion;
+            }
             drawInformation?.SetPixelShaderConstantBuffer(_constants);
         }
         public override void MapInputRectsToOutputRect(RawRect[] inputRects, RawRect[] inputOpaqueSubRects, out RawRect outputRect, out RawRect outputOpaqueSubRect)
@@ -43,12 +66,15 @@ internal sealed class RomanShader(IGraphicsDevicesAndContext devices) : D2D1Cust
             int halo=(int)MathF.Ceiling(_constants.Radius+_constants.Dispersion)+2;
             inputRects[0]=new(outputRect.Left-halo,outputRect.Top-halo,outputRect.Right+halo,outputRect.Bottom+halo);
         }
+        [InlineArray(16)]
+        private struct VectorTable { private Vector4 _element0; }
         [StructLayout(LayoutKind.Sequential)]
         private struct Constants
         {
             public float Mode,Amount,Radius,Density;
             public float Dispersion,Glow,Phase,Angle;
             public float Left,Top,Right,Bottom;
+            public VectorTable Directions, Waves;
         }
     }
 }

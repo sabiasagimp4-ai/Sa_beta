@@ -11,4 +11,10 @@ for($i=0;$i -lt $fields.Length;$i++) {
     $offset=$i*4
     if ($assembly -notmatch "float[1-4]?\s+$($fields[$i]);\s+// Offset:\s+$offset\s") { throw "Invalid layout: $($fields[$i])" }
 }
-Write-Output 'PASS: shader coordinates and 48-byte constant layout'
+foreach ($entry in @(@('directions',48),@('waves',304))) {
+    if ($assembly -notmatch "float4\s+$($entry[0])\[16\];\s+// Offset:\s+$($entry[1])\s") { throw "Invalid table layout: $($entry[0])" }
+}
+Write-Output 'PASS: shader coordinates and 560-byte constant layout' 
+
+# Report compiler instruction count for future optimization comparisons.
+$assembly -split "`n" | Where-Object { $_ -match 'instruction slots used' } | Write-Output

@@ -10,7 +10,18 @@ static thread_local float mode,amount,radius,density,dispersion,glow,phase,angle
 static thread_local const float* pixels;
 static thread_local int width,height;
 #define LOOP
+#ifdef ROMAN_BASELINE
+#include "baseline/RomanCore.hlsli"
+#else
+static thread_local float directions[16][2], waves[16][4];
+static float directionX(int i) { return directions[i][0]; }
+static float directionY(int i) { return directions[i][1]; }
+static float waveR(int i) { return waves[i][0]; }
+static float waveG(int i) { return waves[i][1]; }
+static float waveB(int i) { return waves[i][2]; }
+static float waveEnvelope(int i) { return waves[i][3]; }
 #include "../ymm/Shaders/RomanCore.hlsli"
+#endif
 Pixel sampleAt(float x,float y)
 {
     x=std::clamp(x-.5f,0.f,float(width-1));
@@ -27,6 +38,18 @@ extern "C" void render(const float* src,float* dst,int w,int h,const float* p)
     {
         pixels=src;width=w;height=h;
         mode=p[0];amount=p[1];radius=p[2];density=p[3];dispersion=p[4];glow=p[5];phase=p[6];angle=p[7];
+        #ifndef ROMAN_BASELINE
+        for(int i=0;i<16;++i) {
+            // Match the original scalar core's arithmetic, including intermediate rounding.
+            float theta=6.2831853*(float(i)/16.0)+angle;
+            directions[i][0]=cos(theta); directions[i][1]=sin(theta);
+            float u=float(i+1)/16.0;
+            float envelope=exp(-u*2.5);
+            float wave=6.2831853*u*density-phase;
+            float spread=dispersion*.03;
+            waves[i][0]=cos(wave-spread);waves[i][1]=cos(wave);waves[i][2]=cos(wave+spread);waves[i][3]=envelope;
+        }
+        #endif
         #pragma omp for
         for(int y=0;y<h;++y) for(int x=0;x<w;++x)
         {

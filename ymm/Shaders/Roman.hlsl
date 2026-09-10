@@ -3,6 +3,15 @@
 float mode, amount, radius, density;
 float dispersion, glow, phase, angle;
 float4 inputBounds;
+// Precomputed once on the host when the corresponding animated values change.
+float4 directions[16];
+float4 waves[16];
+float directionX(int i) { return directions[i].x; }
+float directionY(int i) { return directions[i].y; }
+float waveR(int i) { return waves[i].x; }
+float waveG(int i) { return waves[i].y; }
+float waveB(int i) { return waves[i].z; }
+float waveEnvelope(int i) { return waves[i].w; }
 #define LOOP [loop]
 #include "RomanCore.hlsli"
 Pixel sampleAt(float x, float y)

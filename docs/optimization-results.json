@@ -1,0 +1,104 @@
+{
+  "resolution": [
+    1536,
+    1152
+  ],
+  "rows": [
+    {
+      "name": "01 Glass strata",
+      "before_s": 0.05106784399998787,
+      "after_s": 0.05278618900001675,
+      "speedup": 0.9674470721872281,
+      "max_float_error": 0.0,
+      "changed_8bit_channels": 0
+    },
+    {
+      "name": "02 Opal layers",
+      "before_s": 0.04071125999999481,
+      "after_s": 0.05158749600002466,
+      "speedup": 0.7891691428476263,
+      "max_float_error": 0.0,
+      "changed_8bit_channels": 0
+    },
+    {
+      "name": "03 Chromatic fault",
+      "before_s": 0.047650552999982665,
+      "after_s": 0.04831344400000148,
+      "speedup": 0.9862793677052127,
+      "max_float_error": 0.0,
+      "changed_8bit_channels": 0
+    },
+    {
+      "name": "04 Vertical rift",
+      "before_s": 0.055558861999998044,
+      "after_s": 0.05287236899999925,
+      "speedup": 1.0508109065436206,
+      "max_float_error": 0.0,
+      "changed_8bit_channels": 0
+    },
+    {
+      "name": "05 Crystal collapse",
+      "before_s": 0.05393269500001452,
+      "after_s": 0.05851599200002511,
+      "speedup": 0.921674454395157,
+      "max_float_error": 0.0,
+      "changed_8bit_channels": 0
+    },
+    {
+      "name": "06 Molten spectrum",
+      "before_s": 0.05337590700000305,
+      "after_s": 0.05355179200000748,
+      "speedup": 0.9967156094420817,
+      "max_float_error": 0.0,
+      "changed_8bit_channels": 0
+    },
+    {
+      "name": "07 Edge halo",
+      "before_s": 2.6640001720000157,
+      "after_s": 1.560874966,
+      "speedup": 1.7067351517764144,
+      "max_float_error": 0.0,
+      "changed_8bit_channels": 0
+    },
+    {
+      "name": "08 Spectral echoes",
+      "before_s": 2.7443536119999976,
+      "after_s": 1.6249433609999642,
+      "speedup": 1.688891857936,
+      "max_float_error": 0.0,
+      "changed_8bit_channels": 0
+    },
+    {
+      "name": "09 Interference field",
+      "before_s": 3.1263565040000003,
+      "after_s": 1.8263991029999715,
+      "speedup": 1.7117597675473941,
+      "max_float_error": 0.0,
+      "changed_8bit_channels": 0
+    },
+    {
+      "name": "10 Neon engraving",
+      "before_s": 2.6325182629999517,
+      "after_s": 1.5634831269999836,
+      "speedup": 1.68375226923698,
+      "max_float_error": 0.0,
+      "changed_8bit_channels": 0
+    },
+    {
+      "name": "11 Electric fog",
+      "before_s": 2.7675556890000053,
+      "after_s": 1.6346065289999956,
+      "speedup": 1.693102064564195,
+      "max_float_error": 0.0,
+      "changed_8bit_channels": 0
+    },
+    {
+      "name": "12 Wave catastrophe",
+      "before_s": 2.8511679490000006,
+      "after_s": 1.7001503359999788,
+      "speedup": 1.6770093141928104,
+      "max_float_error": 0.0,
+      "changed_8bit_channels": 0
+    }
+  ]
+}

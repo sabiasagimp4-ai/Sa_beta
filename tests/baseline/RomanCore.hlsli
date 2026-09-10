@@ -37,7 +37,8 @@ Pixel roman(float x, float y)
         float wr=0.0, wg=0.0, wb=0.0;
         LOOP for(int d=0; d<16; ++d)
         {
-            float dx=directionX(d),dy=directionY(d);
+            float theta = 6.2831853*(float(d)/16.0)+angle;
+            float dx=cos(theta),dy=sin(theta);
             float previous=l;
             LOOP for(int s=1; s<=16; ++s)
             {
@@ -47,10 +48,12 @@ Pixel roman(float x, float y)
                 float current=q.a>0.00001 ? light(q) : previous;
                 float e=(current-previous)*min(q.a,src.a);
                 previous=current;
-                float envelope=waveEnvelope(s-1);
-                wr+=e*envelope*waveR(s-1);
-                wg+=e*envelope*waveG(s-1);
-                wb+=e*envelope*waveB(s-1);
+                float envelope=exp(-u*2.5);
+                float wave=6.2831853*u*density-phase;
+                float spread=dispersion*.03;
+                wr+=e*envelope*cos(wave-spread);
+                wg+=e*envelope*cos(wave);
+                wb+=e*envelope*cos(wave+spread);
             }
         }
         float gain=glow*1.8;
