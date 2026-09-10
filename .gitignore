@@ -1,0 +1,7 @@
+**/bin/
+**/obj/
+*.so
+__pycache__/
+outputs/
+ymm4-host/
+*.zip
