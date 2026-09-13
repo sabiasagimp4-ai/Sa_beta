@@ -73,11 +73,16 @@ internal sealed class RomanShader(IGraphicsDevicesAndContext devices) : D2D1Cust
         }
         public override void MapOutputRectToInputRects(RawRect outputRect, RawRect[] inputRects)
         {
+            // The fluid backtrace travels at most 1.65*Radius. Velocity samples
+            // neighbours at h and each neighbour probes another h away.
+            float h=.8f+MathF.Min(_constants.Radius*.02f,8f);
             int halo=(int)MathF.Ceiling(_constants.Mode > 1.5f
-                ? _constants.Radius + 2f + MathF.Min(_constants.Radius*.02f,8f)
+                ? 1.65f*_constants.Radius+2f*h
                 : _constants.Radius+_constants.Dispersion)+2;
-            inputRects[0]=new(outputRect.Left-halo,outputRect.Top-halo,outputRect.Right+halo,outputRect.Bottom+halo);
+            inputRects[0]=new(Safe((long)outputRect.Left-halo),Safe((long)outputRect.Top-halo),Safe((long)outputRect.Right+halo),Safe((long)outputRect.Bottom+halo));
         }
+        private static int Safe(long value)=>(int)Math.Clamp(value,int.MinValue,int.MaxValue);
+
         [InlineArray(16)]
         private struct VectorTable { private Vector4 _element0; }
         [StructLayout(LayoutKind.Sequential)]
